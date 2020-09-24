@@ -42,3 +42,5 @@ Temporary Items
 .history
 
 # End of https://www.toptal.com/developers/gitignore/api/osx,visualstudiocode
+node_modules
+
