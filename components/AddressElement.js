@@ -16,7 +16,7 @@ template.innerHTML = `
               <div class="container">
                   <li>
                       <label for="plz">PLZ</label>
-                      <input type="number" id="plz" required />
+                      <input ref="input" type="text" id="plz" required />
                   </li>
                   <li>
                       <label for="stadt">Stadt</label>
@@ -28,11 +28,11 @@ template.innerHTML = `
                   </li>
                   <li>
                       <label for="hausnummer">Hausnummer</label>
-                      <input type="number" id="hausnummer" required />
+                      <input type="text" id="hausnummer" required />
                   </li>
                   <li>
                       <label for="land">Land</label>
-                      <input type="text" id="land" required />
+                      <input type="text" id="land" value="de" required />
                   </li>
               </div>
               <li>
@@ -47,13 +47,44 @@ template.innerHTML = `
 class AddressElement extends HTMLElement {
   constructor() {
     super()
+
     //creating the shadow DOM
     const shadow = this.attachShadow({ mode: "open" })
     //we must clone the template tag so it can be processed
     const shadowMarkup = template.content.cloneNode(true)
     shadow.appendChild(shadowMarkup)
   }
+
+  connectedCallback() {
+    // console.log(this)
+    let shadowRoot = this.shadowRoot
+    let plz = shadowRoot.querySelector("#plz")
+    console.log("PLZ :>> ", plz)
+    let plzValue = plz.value
+    console.log(plz.value)
+  }
 }
+
+// plz.addEventListener("change", () => handleChange(plzValue))
+
+// // const url = `https://cors-
+// // anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?autocomplete=plz&plz_city=ort`
+
+// const handleChange = (zipCode) => {
+//   const jsonData = fetch(`https://cors-
+//   anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?autocomplete=plz&plz_plz=${zipCode}`)
+//     .then((res) => res.json())
+//     .then((data) => {
+//       let element = document.getElementById("test")
+//       element.innerHTML = `
+//       <p>${data.rows.map((x) => x.plz)}</p>
+//       <p>${data.rows.map((x) => x.city)}</p>
+//       `
+
+//       console.log(data)
+//     })
+//     .catch((err) => console.log(err))
+// }
 
 // we indicate to the browser that there is an association between the name of the tag
 // and the class that implements its functionality
