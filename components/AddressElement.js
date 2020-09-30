@@ -63,20 +63,24 @@ class AddressElement extends HTMLElement {
     console.log("PLZ :>> ", plz)
 
     const handleChange = () => {
-      let plzValue = plz.value;
-      console.log('PLZvalue :>> ', plzValue);
-    };
+      let plzValue = plz.value
+      console.log("PLZvalue :>> ", plzValue)
 
-    plz.addEventListener('keyup', handleChange);
+      fetch(
+        `https://cors-anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?finda=city&city=${plzValue}&lang=de_DE`
+      )
+        .then((res) => res.json())
+        .then((data) => console.log(data))
+        .catch((err) => console.log(err))
+    }
 
-    
-
-
+    plz.addEventListener("keyup", handleChange)
   }
 }
 
 // plz.addEventListener("change", () => handleChange(plzValue))
-
+// `https://cors-anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?autocomplete=street&plz_city=Geben%20Sie%20einen%20Ort%20ein.&plz_plz=&plz_district=&plz_street=${plzValue}`
+      
 // // const url = `https://cors-
 // // anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?autocomplete=plz&plz_city=ort`
 
