@@ -16,7 +16,7 @@ template.innerHTML = `
               <div class="container">
                   <li>
                       <label for="plz">PLZ</label>
-                      <input ref="input" type="text" id="plz" required />
+                      <input type="text" id="plz" required />
                   </li>
                   <li>
                       <label for="stadt">Stadt</label>
@@ -47,21 +47,31 @@ template.innerHTML = `
 class AddressElement extends HTMLElement {
   constructor() {
     super()
-
     //creating the shadow DOM
+    //this is a reference to the custom element itself
     const shadow = this.attachShadow({ mode: "open" })
     //we must clone the template tag so it can be processed
     const shadowMarkup = template.content.cloneNode(true)
     shadow.appendChild(shadowMarkup)
   }
 
+  // The connectedCallback () method is called every time you insert a custom element on the page.
   connectedCallback() {
-    // console.log(this)
+    //console.log(this)
     let shadowRoot = this.shadowRoot
     let plz = shadowRoot.querySelector("#plz")
     console.log("PLZ :>> ", plz)
-    let plzValue = plz.value
-    console.log(plz.value)
+
+    const handleChange = () => {
+      let plzValue = plz.value;
+      console.log('PLZvalue :>> ', plzValue);
+    };
+
+    plz.addEventListener('change', handleChange);
+
+    
+
+
   }
 }
 
