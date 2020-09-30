@@ -67,7 +67,7 @@ class AddressElement extends HTMLElement {
       console.log('PLZvalue :>> ', plzValue);
     };
 
-    plz.addEventListener('change', handleChange);
+    plz.addEventListener('keyup', handleChange);
 
     
 
