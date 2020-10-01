@@ -24,9 +24,9 @@ template.innerHTML = `
                   </li>
                   <li>
                       <label for="straße">Straße</label>
-                      
-                      <select id="straße" required>
-                      </select>
+                      <input type="text" list="straße" />
+                      <datalist id="straße">
+                      </datalist>
                   </li>
                   <li>
                       <label for="hausnummer">Hausnummer</label>
@@ -84,9 +84,15 @@ class AddressElement extends HTMLElement {
           // assign the value of the variable city to the object "stadt"
           stadt.value = city;
           let streets = data.rows.map((x) => x.street);
-          for (let i = 0; i < streets.length; i++){
-            straße.options[i] = new Option(streets[i])
-          }
+          
+          // create and populate datalist
+          streets.forEach(element => {
+            let option = document.createElement('option');
+            option.value = element;
+            straße.appendChild(option)
+          });
+
+          
           console.log("este es la var streets :>>", streets)
           })
         .catch((err) => console.log(err))

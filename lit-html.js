@@ -58,3 +58,5 @@ console.log(data)
 // Render the template to the document
 // Agregamos nuestro template al cuerpo de nuestro documento
 render(myTemplate, document.body)
+
+
