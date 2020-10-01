@@ -11,7 +11,7 @@
   list-style-type: none;
   list-style-position: outside;
   margin: 2vw;
-  padding: 0vw;
+  padding: 1vw;
 }
 
 /* .contact_form li {
@@ -47,16 +47,11 @@
   padding: 3px;
 }
 
-.contact_form #plz {
-  height: 2vw;
-  width: 12vw;
-  padding: 5px 8px;
-}
 
 .contact_form #plz {
-  height: 2vw;
+  /* height: 2vw;
   width: 12vw;
-  padding: 5px 8px;
+  padding: 0vw */
 }
 
 .contact_form textarea {

@@ -24,7 +24,9 @@ template.innerHTML = `
                   </li>
                   <li>
                       <label for="straße">Straße</label>
-                      <input type="text" id="straße" required />
+                      
+                      <select id="straße" required>
+                      </select>
                   </li>
                   <li>
                       <label for="hausnummer">Hausnummer</label>
@@ -55,78 +57,80 @@ class AddressElement extends HTMLElement {
     shadow.appendChild(shadowMarkup)
   }
 
-  // The connectedCallback () method is called every time you insert a custom element on the page.
-  connectedCallback() {
-    //console.log(this)
+  handleEvent(e){
+    if(e.type === "keyup")
+    this.fetchData();
+  }
+
+  
+
+  fetchData(){
     let shadowRoot = this.shadowRoot
     let plz = shadowRoot.querySelector("#plz")
-    // console.log("PLZ :>> ", plz)
-
-
-
-    const handleChange = () => {
-      let plzValue = plz.value
+    let plzValue = plz.value
       console.log("PLZvalue :>> ", plzValue)
 
       const stadt = shadowRoot.querySelector("#stadt")
+      const straße = shadowRoot.querySelector("#straße")
 
-      fetch(
+      if(!plz.value.length == 0) {
+              fetch(
         `https://cors-anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?finda=city&city=${plzValue}&lang=de_DE`
       )
         .then((res) => res.json())
-        // .then((data) => console.log("data :>> ", data.rows[0].city))
-        .then((data) => {let city = data.rows[0].city
+        .then((data) => {
+          let city = data.rows[0].city
+          console.log("este es la var city :>>", city)
           // assign the value of the variable city to the object "stadt"
-          stadt.value = `${city}`
-        console.log("este es la var city :>>", city)})
+          stadt.value = city;
+          let streets = data.rows.map((x) => x.street);
+          for (let i = 0; i < streets.length; i++){
+            straße.options[i] = new Option(streets[i])
+          }
+          console.log("este es la var streets :>>", streets)
+          })
         .catch((err) => console.log(err))
-      
-    
-        
-        //console.log("city", stadt)
-        // // API
-      // const cors_api_host = "cors-anywhere.herokuapp.com"
-      // const cors_api_url = "https://" + cors_api_host + "/"
-      // const postdireckt_url =
-      //   "https://www.postdirekt.de/plzserver/PlzAjaxServlet?finda=city&city=${plzValue}&lang=de_DE"
-      // const api_url = cors_api_url + postdireckt_url
-
-      // let jsonData = fetch(api_url)
-      //   .then((res) => res.json())
-      //   .then((data) => console.log(data))
-      //   .catch((err) => console.log(err))
-
-
-      
-    }
-
-    
-
-    plz.addEventListener("keyup", handleChange)
+      }
+      else {
+        stadt.value = "";
+      }
   }
+
+  // The connectedCallback () method is called every time you insert a custom element on the page.
+  connectedCallback() {
+
+    let shadowRoot = this.shadowRoot
+    let plz = shadowRoot.querySelector("#plz")
+    plz.addEventListener("keyup", this)
+   
+    // const handleChange = () => {
+    //   let plzValue = plz.value
+    //   console.log("PLZvalue :>> ", plzValue)
+
+    //   const stadt = shadowRoot.querySelector("#stadt")
+
+    //   if(!plz.value.length == 0) {
+    //           fetch(
+    //     `https://cors-anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?finda=city&city=${plzValue}&lang=de_DE`
+    //   )
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //       let city = data.rows[0].city
+    //       // assign the value of the variable city to the object "stadt"
+    //       stadt.value = `${city}`
+    //       console.log("este es la var city :>>", city)})
+    //     .catch((err) => console.log(err))
+    //   }
+    //   else {
+    //     stadt.value = "";
+    //   }
+  }
+  
+  // disconnectedCallback() {
+  //   plz.removeEvenetListener("keyup", this)
+  // }
 }
 
-// plz.addEventListener("change", () => handleChange(plzValue))
-// `https://cors-anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?autocomplete=street&plz_city=Geben%20Sie%20einen%20Ort%20ein.&plz_plz=&plz_district=&plz_street=${plzValue}`
-
-// // const url = `https://cors-
-// // anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?autocomplete=plz&plz_city=ort`
-
-// const handleChange = (zipCode) => {
-//   const jsonData = fetch(`https://cors-
-//   anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?autocomplete=plz&plz_plz=${zipCode}`)
-//     .then((res) => res.json())
-//     .then((data) => {
-//       let element = document.getElementById("test")
-//       element.innerHTML = `
-//       <p>${data.rows.map((x) => x.plz)}</p>
-//       <p>${data.rows.map((x) => x.city)}</p>
-//       `
-
-//       console.log(data)
-//     })
-//     .catch((err) => console.log(err))
-// }
 
 // we indicate to the browser that there is an association between the name of the tag
 // and the class that implements its functionality
