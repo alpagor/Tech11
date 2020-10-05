@@ -60,3 +60,39 @@ console.log(data)
 render(myTemplate, document.body)
 
 
+// Trigger the Pop-up/Modal 
+    
+
+// Pop-up/Modal 
+<div id="myModal" class="popup">
+<!-- Modal content -->
+<div class="caption">
+  <p>¡Muchas gracias!</p>
+</div>
+</div>
+
+
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("info");
+
+
+
+// When the user clicks the button, open the modal 
+btn.onclick = function () {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <i> (x), close the modal
+i.onclick = function () {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}

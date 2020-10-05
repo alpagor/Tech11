@@ -47,7 +47,6 @@
   padding: 3px;
 }
 
-
 .contact_form #plz {
   /* height: 2vw;
   width: 12vw;
@@ -61,4 +60,25 @@
 
 .contact_form button {
   margin-left: 156px;
+}
+
+.results {
+  width: 90vw;
+  max-width: 550px;
+  /* margin: 8vh auto; */
+  margin: 12vh;
+}
+
+.results__heading {
+  font-size: 110%;
+}
+
+.results__display-wrapper {
+  margin-top: 16px;
+  margin-top: 1rem;
+  padding: 8px 16px;
+  padding: 0.5rem 1rem;
+  background: #f9fdfe;
+  border: 1px solid #cdcfcf;
+  overflow-x: scroll;
 }
