@@ -17,21 +17,21 @@ template.innerHTML = `
               <div class="container">
                   <li>
                       <label for="plz">PLZ</label>
-                      <input type="text" id="plz" required />
+                      <input type="text" id="plz" name ="plz" required />
                   </li>
                   <li>
                       <label for="stadt">Stadt</label>
-                      <input type="text" id="stadt" required />
+                      <input type="text" id="stadt" name ="stadt" required />
                   </li>
                   <li>
                       <label for="straße">Straße</label>
-                      <input type="text" list="straße" />
+                      <input type="text" list="straße" name ="straße"/>
                       <datalist id="straße">
                       </datalist>
                   </li>
                   <li>
                       <label for="hausnummer">Hausnummer</label>
-                      <input type="text" id="hausnummer" required />
+                      <input type="text" id="hausnummer" name ="hausnummer" required />
                   </li>
                   <li>
                       <label for="land">Land</label>
@@ -39,7 +39,7 @@ template.innerHTML = `
                   </li>
               </div>
               <li>
-                  <button type="submit" id="info" onClick="{() => this.handleFormSubmit()}">Info</button>
+                  <button type="submit" id="info" onClick="{() => handleFormSubmit()}">Info</button>
               </li>
           </ul>
       </div>
@@ -47,7 +47,7 @@ template.innerHTML = `
 </div>
 <div class="results">
   <h2 class="results__heading">Form Data</h2>
-  <pre class="results__display-wrapper"><code class="results__display"></code></pre>
+  <pre class="results__display-wrapper"><code class="results__display" id="results_display"></code></pre>
 </div>`
 
 // Javascript logic of the component
@@ -101,13 +101,22 @@ class AddressElement extends HTMLElement {
     }
   }
 
-  handleFormSubmit = () => {
+  // formToJSON = elements => [].reduce.call(elements, (data, element) => {
+  //   data[element.name] = element.value;
+  //   return data;
+  // }, {});
+
+  handleFormSubmit = (e) => {
     // Stop the form from submitting since we’re handling that with AJAX.
-    // e.preventDefault()
+    e.preventDefault()
+    console.log(this)
+    const data = {}
     // TODO: Call our function to get the form data.
-    const data = console.log("aquí saldrán los datos JSON")
+    // const data = console.log("datos JSON")
+    // const data = console.log(formToJSON(form.elements));
     // Demo only: print the form data onscreen as a formatted JSON object.
-    const dataContainer = document.getElementsByClassName("results__display")
+    const dataContainer = this.shadowRoot.querySelector("#results_display")
+    console.log("Aquí muestro datos:>> ", dataContainer)
     // Use `JSON.stringify()` to make the output valid, human-readable JSON.
     dataContainer.textContent = JSON.stringify(data, null, "  ")
     // ...this is where we’d actually do something with the form data...
@@ -124,13 +133,13 @@ class AddressElement extends HTMLElement {
     // this.button = this.shadowRoot.querySelector("button")
     // this.button.addEventListener("click", () => this.sendMessage())
 
-  /*
+    /*
   We find the form element using its class name, then attach the `handleFormSubmit()` function to the
   `submit` event.
  */
     const button = shadowRoot.querySelector(".contact_form")
     console.log("form element :>> ", button)
-    button.addEventListener("submit", this.handleFormSubmit);
+    button.addEventListener("submit", this.handleFormSubmit)
     // const handleChange = () => {
     //   let plzValue = plz.value
     //   console.log("PLZvalue :>> ", plzValue)
