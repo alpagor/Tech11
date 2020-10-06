@@ -104,7 +104,6 @@ class AddressElement extends HTMLElement {
       } else if (plzValue.length == "") {
         this.stadt.value = ""
         this.hausnummer.value = ""
-        // why field doesn't empty???
         let datalistOpts = this.straße.children.length
         for (var i = 0; i < datalistOpts; i++) {
           this.straße.children[0].remove()
@@ -115,18 +114,17 @@ class AddressElement extends HTMLElement {
 
     this.plz.addEventListener("keyup", fetchData)
 
-    const formToJSON = (elements) => {
-      ;[].reduce.call(
+    const formToJSON = (elements) =>
+      [].reduce.call(
         elements,
         (data, element) => {
           data[element.name] = element.value
-          console.log("DATA_OBJ_LITERAL :>> ", data)
-          // console.log("JSON_stringify :>> ", JSON.stringify(data))
+          //console.log("DATA_OBJ_LITERAL :>> ", data)
+          console.log("JSON_stringify :>> ", JSON.stringify(data))
           return data
         },
         {}
       )
-    }
 
     const handleFormSubmit = (e) => {
       // Stop the form from submitting since we’re handling that with FETCH.
@@ -144,7 +142,7 @@ class AddressElement extends HTMLElement {
 
       // Use `JSON.stringify()` to make the output valid, human-readable JSON.
       // this.dataContainer.textContent = JSON.stringify(data, null, "  ")
-      this.dataContainer.textContent = JSON.stringify(dataObj)
+      this.dataContainer.textContent = JSON.stringify(dataObj, null, "  ")
       // console.log("DATA CONTAINER_text :>> ", this.dataContainer.textContent)
       // const dataObj = {} :>> print "{}" on the dataContainer line 131 works
       // ...this is where we’d actually do something with the form data...
