@@ -31,11 +31,11 @@ template.innerHTML = `
                   </li>
                   <li>
                       <label for="hausnummer">Hausnummer</label>
-                      <input type="text" id="hausnummer" name ="hausnummer" required />
+                      <input type="text" id="hausnummer" name="hausnummer" required />
                   </li>
                   <li>
                       <label for="land">Land</label>
-                      <input type="text" id="land" value="de" required />
+                      <input type="text" id="land" name="land" value="de" required />
                   </li>
               </div>
               <li>
@@ -60,23 +60,26 @@ class AddressElement extends HTMLElement {
     //we must clone the template tag so it can be processed
     const shadowMarkup = template.content.cloneNode(true)
     shadow.appendChild(shadowMarkup)
+
+    // public properties
+    let shadowRoot = this.shadowRoot
+    this.plz = shadowRoot.querySelector("#plz")
+    this.stadt = shadowRoot.querySelector("#stadt")
+    this.straße = shadowRoot.querySelector("#straße")
+    this.form = shadowRoot.querySelector("#contact_form")
+
+    
   }
 
   handleEvent(e) {
-    e.preventDefault()
     if (e.type === "keyup") this.fetchData()
   }
 
   fetchData() {
-    let shadowRoot = this.shadowRoot
-    let plz = shadowRoot.querySelector("#plz")
-    let plzValue = plz.value
+
+    let plzValue = this.plz.value
     console.log("PLZvalue :>> ", plzValue)
-
-    const stadt = shadowRoot.querySelector("#stadt")
-    const straße = shadowRoot.querySelector("#straße")
-
-    if (!plz.value.length == 0) {
+    
       fetch(
         `https://cors-anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?finda=city&city=${plzValue}&lang=de_DE`
       )
@@ -85,40 +88,49 @@ class AddressElement extends HTMLElement {
           let city = data.rows[0].city
           console.log("este es la var city :>>", city)
           // assign the value of the variable city to the object "stadt"
-          stadt.value = city
+          this.stadt.value = city
           let streets = data.rows.map((x) => x.street)
           console.log("este es la var streets :>>", streets)
           // create and populate datalist
           streets.forEach((element) => {
             let option = document.createElement("option")
             option.value = element
-            straße.appendChild(option)
+            this.straße.appendChild(option)
           })
         })
         .catch((err) => console.log(err))
-    } else {
-      stadt.value = ""
-    }
-  }
+      }
+  
 
-  // formToJSON = elements => [].reduce.call(elements, (data, element) => {
-  //   data[element.name] = element.value;
-  //   return data;
-  // }, {});
+  formToJSON = (elements) => {
+    [].reduce.call(elements, (data, element) => {
+      data[element.name] = element.value;
+      console.log('DATA_OBJ :>> ', data);
+      console.log('JSON_stringify :>> ',JSON.stringify(data));
+      return data;
+    }, {})
+  }
+  
 
   handleFormSubmit = (e) => {
-    // Stop the form from submitting since we’re handling that with AJAX.
+    // Stop the form from submitting since we’re handling that with FETCH.
     e.preventDefault()
-    console.log(this)
-    const data = {}
-    // TODO: Call our function to get the form data.
-    // const data = console.log("datos JSON")
-    // const data = console.log(formToJSON(form.elements));
+
+    // The HTMLFormElement property elements returns an HTMLFormControlsCollection listing 
+    // all the form controls contained in the <form> element.
+    // Call our function to get the form data obj.
+    // console.log('FORM_ELEMENTS:>> ', form.elements)
+    
+    const dataObj = this.formToJSON(this.form.elements); // why doesn't save the data obj in the const?
+    // const data = {} print "{}" on the dataContainer
+    console.log('DATA_in_HandleSubmit :>> ', dataObj);
     // Demo only: print the form data onscreen as a formatted JSON object.
     const dataContainer = this.shadowRoot.querySelector("#results_display")
-    console.log("Aquí muestro datos:>> ", dataContainer)
+    // console.log('DATA CONTAINER :>> ', dataContainer )
     // Use `JSON.stringify()` to make the output valid, human-readable JSON.
-    dataContainer.textContent = JSON.stringify(data, null, "  ")
+    // dataContainer.textContent = JSON.stringify(data, null, "  ")
+    dataContainer.textContent = JSON.stringify(dataObj)
+    console.log('DATA CONTAINER_text :>> ', dataContainer.textContent )
     // ...this is where we’d actually do something with the form data...
   }
 
@@ -127,40 +139,12 @@ class AddressElement extends HTMLElement {
     let shadowRoot = this.shadowRoot
     let plz = shadowRoot.querySelector("#plz")
     plz.addEventListener("keyup", this)
-
-    console.log("object this :>> ", this)
-
-    // this.button = this.shadowRoot.querySelector("button")
-    // this.button.addEventListener("click", () => this.sendMessage())
-
     /*
   We find the form element using its class name, then attach the `handleFormSubmit()` function to the
   `submit` event.
  */
-    const button = shadowRoot.querySelector(".contact_form")
-    console.log("form element :>> ", button)
-    button.addEventListener("submit", this.handleFormSubmit)
-    // const handleChange = () => {
-    //   let plzValue = plz.value
-    //   console.log("PLZvalue :>> ", plzValue)
+    this.form.addEventListener("submit", this.handleFormSubmit)
 
-    //   const stadt = shadowRoot.querySelector("#stadt")
-
-    //   if(!plz.value.length == 0) {
-    //           fetch(
-    //     `https://cors-anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?finda=city&city=${plzValue}&lang=de_DE`
-    //   )
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       let city = data.rows[0].city
-    //       // assign the value of the variable city to the object "stadt"
-    //       stadt.value = `${city}`
-    //       console.log("este es la var city :>>", city)})
-    //     .catch((err) => console.log(err))
-    //   }
-    //   else {
-    //     stadt.value = "";
-    //   }
   }
 
   // disconnectedCallback() {

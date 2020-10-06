@@ -60,39 +60,32 @@ console.log(data)
 render(myTemplate, document.body)
 
 
-// Trigger the Pop-up/Modal 
-    
-
-// Pop-up/Modal 
-<div id="myModal" class="popup">
-<!-- Modal content -->
-<div class="caption">
-  <p>¡Muchas gracias!</p>
-</div>
-</div>
-
-
-// Get the modal
-var modal = document.getElementById("myModal");
-
-// Get the button that opens the modal
-var btn = document.getElementById("info");
 
 
 
-// When the user clicks the button, open the modal 
-btn.onclick = function () {
-  modal.style.display = "block";
+formToJSON = (elements) => {
+  [].reduce.call(elements, (data, element) => {
+    data[element.name] = element.value;
+    return data;
+  }, {})
 }
 
-// When the user clicks on <i> (x), close the modal
-i.onclick = function () {
-  modal.style.display = "none";
+handleFormSubmit = (e) => {
+  // Stop the form from submitting since we’re handling that with AJAX.
+  e.preventDefault()
+  // Call our function to get the form data.
+  const data = formToJSON(form.elements)
+  console.log('DATA :>> ', data);
+  // Demo only: print the form data onscreen as a formatted JSON object.
+  const dataContainer = this.shadowRoot.querySelector("#results_display")
+  // console.log("Aquí muestro datos:>> ", dataContainer)
+
+  // Use `JSON.stringify()` to make the output valid, human-readable JSON.
+  dataContainer.textContent = JSON.stringify(data, null, "  ")
+  // ...this is where we’d actually do something with the form data...
 }
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
+const button = shadowRoot.querySelector(".contact_form")
+// console.log("form element :>> ", button)
+button.addEventListener("submit", this.handleFormSubmit)
+
