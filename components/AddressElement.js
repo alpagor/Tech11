@@ -114,13 +114,18 @@ class AddressElement extends HTMLElement {
 
     this.plz.addEventListener("keyup", fetchData)
 
+    // check for valid elements.
+    const isValidElement = (element) => {
+      return element.name && element.value
+    }
+
     const formToJSON = (elements) =>
       [].reduce.call(
         elements,
         (data, element) => {
-          data[element.name] = element.value
-          //console.log("DATA_OBJ_LITERAL :>> ", data)
-          console.log("JSON_stringify :>> ", JSON.stringify(data))
+          if (isValidElement(element)) {
+            data[element.name] = element.value
+          }
           return data
         },
         {}
@@ -130,29 +135,14 @@ class AddressElement extends HTMLElement {
       // Stop the form from submitting since we’re handling that with FETCH.
       e.preventDefault()
 
-      // The HTMLFormElement property elements returns an HTMLFormControlsCollection listing
-      // all the form controls contained in the <form> element.
-      // console.log('FORM_ELEMENTS:>> ', form.elements)
-
       // Call our function to get the form data obj.
       const dataObj = formToJSON(this.form.elements) // why doesn't save the data obj in the const?
-      console.log("TypeOf_DATAOBJ :>> ", typeof dataObj)
-      console.log("DATA_in_HandleSubmit :>> ", dataObj)
-      // Demo only: print the form data onscreen as a formatted JSON object.
 
       // Use `JSON.stringify()` to make the output valid, human-readable JSON.
-      // this.dataContainer.textContent = JSON.stringify(data, null, "  ")
       this.dataContainer.textContent = JSON.stringify(dataObj, null, "  ")
-      // console.log("DATA CONTAINER_text :>> ", this.dataContainer.textContent)
-      // const dataObj = {} :>> print "{}" on the dataContainer line 131 works
-      // ...this is where we’d actually do something with the form data...
     }
     this.form.addEventListener("submit", handleFormSubmit)
   }
-
-  // disconnectedCallback() {
-  //
-  // }
 }
 
 // we indicate to the browser that there is an association between the name of the tag
