@@ -1,7 +1,9 @@
 /* === Form Typography === */
 
 .contact_form h2,
-.contact_form label {
+.contact_form,
+.results__heading,
+label {
   font-family: Georgia, Times, "Times New Roman", serif;
 }
 
@@ -10,7 +12,7 @@
   width: 70%;
   list-style-type: none;
   list-style-position: outside;
-  margin: 2vw;
+  margin: 3vw;
   padding: 1vw;
 }
 
@@ -27,46 +29,50 @@
 
 /* === Form Header === */
 .contact_form h2 {
-  margin: 0;
-  display: inline;
+  margin: 0 0.5vw;
 }
 
 /* === Form Elements === */
 
-.container {
+.form_container {
   display: flex;
   flex-flow: row wrap;
+  max-width: 80%;
+}
+
+.form_container li {
+  padding: 0.5vw;
+}
+
+#plz_label {
+  padding-right: 1.9vw;
+}
+
+input[type="text" i] {
+  padding: 0.5vh 0.2vw;
 }
 
 .contact_form label {
-  width: 5px;
-  margin-top: 3px;
+  /* width: 5px; */
+  /* margin-top: 3px; */
   /* display: inline-block; */
   /* float: left; */
-  align-self: ;
-  padding: 3px;
-}
-
-.contact_form #plz {
-  /* height: 2vw;
-  width: 12vw;
-  padding: 0vw */
-}
-
-.contact_form textarea {
-  padding: 8px;
-  width: 300px;
+  padding-right: 1.7vw;
 }
 
 .contact_form button {
-  margin-left: 156px;
+  margin: 0.5vw;
+}
+
+button[type="submit"] {
+  padding: 0.5vh 3vw;
 }
 
 .results {
   width: 90vw;
-  max-width: 550px;
-  /* margin: 8vh auto; */
-  margin: 12vh;
+  max-width: 30%;
+  margin: 0vh 4vw;
+  /* margin: 12vh; */
 }
 
 .results__heading {

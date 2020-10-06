@@ -14,9 +14,9 @@ template.innerHTML = `
               <li>
                   <h2>Adresse</h2>
               </li>
-              <div class="container">
+              <div class="form_container">
                   <li>
-                      <label for="plz">PLZ</label>
+                      <label for="plz" id="plz_label">PLZ</label>
                       <input type="text" id="plz" name ="plz" required />
                   </li>
                   <li>
@@ -39,7 +39,7 @@ template.innerHTML = `
                   </li>
               </div>
               <li>
-                  <button type="submit" id="info" onClick="{() => handleFormSubmit()}">Info</button>
+                  <button type="submit" id="info">INFO</button>
               </li>
           </ul>
       </div>
@@ -67,88 +67,88 @@ class AddressElement extends HTMLElement {
     this.stadt = shadowRoot.querySelector("#stadt")
     this.straße = shadowRoot.querySelector("#straße")
     this.form = shadowRoot.querySelector("#contact_form")
-
-    
-  }
-
-  handleEvent(e) {
-    if (e.type === "keyup") this.fetchData()
-  }
-
-  fetchData() {
-
-    let plzValue = this.plz.value
-    console.log("PLZvalue :>> ", plzValue)
-    
-      fetch(
-        `https://cors-anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?finda=city&city=${plzValue}&lang=de_DE`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          let city = data.rows[0].city
-          console.log("este es la var city :>>", city)
-          // assign the value of the variable city to the object "stadt"
-          this.stadt.value = city
-          let streets = data.rows.map((x) => x.street)
-          console.log("este es la var streets :>>", streets)
-          // create and populate datalist
-          streets.forEach((element) => {
-            let option = document.createElement("option")
-            option.value = element
-            this.straße.appendChild(option)
-          })
-        })
-        .catch((err) => console.log(err))
-      }
-  
-
-  formToJSON = (elements) => {
-    [].reduce.call(elements, (data, element) => {
-      data[element.name] = element.value;
-      console.log('DATA_OBJ :>> ', data);
-      console.log('JSON_stringify :>> ',JSON.stringify(data));
-      return data;
-    }, {})
-  }
-  
-
-  handleFormSubmit = (e) => {
-    // Stop the form from submitting since we’re handling that with FETCH.
-    e.preventDefault()
-
-    // The HTMLFormElement property elements returns an HTMLFormControlsCollection listing 
-    // all the form controls contained in the <form> element.
-    // Call our function to get the form data obj.
-    // console.log('FORM_ELEMENTS:>> ', form.elements)
-    
-    const dataObj = this.formToJSON(this.form.elements); // why doesn't save the data obj in the const?
-    // const data = {} print "{}" on the dataContainer
-    console.log('DATA_in_HandleSubmit :>> ', dataObj);
-    // Demo only: print the form data onscreen as a formatted JSON object.
-    const dataContainer = this.shadowRoot.querySelector("#results_display")
-    // console.log('DATA CONTAINER :>> ', dataContainer )
-    // Use `JSON.stringify()` to make the output valid, human-readable JSON.
-    // dataContainer.textContent = JSON.stringify(data, null, "  ")
-    dataContainer.textContent = JSON.stringify(dataObj)
-    console.log('DATA CONTAINER_text :>> ', dataContainer.textContent )
-    // ...this is where we’d actually do something with the form data...
+    this.dataContainer = shadowRoot.querySelector("#results_display")
   }
 
   // The connectedCallback () method is called every time you insert a custom element on the page.
+  // WebComponent logic
   connectedCallback() {
-    let shadowRoot = this.shadowRoot
-    let plz = shadowRoot.querySelector("#plz")
-    plz.addEventListener("keyup", this)
-    /*
-  We find the form element using its class name, then attach the `handleFormSubmit()` function to the
-  `submit` event.
- */
-    this.form.addEventListener("submit", this.handleFormSubmit)
+    const fetchData = () => {
+      let plzValue = this.plz.value
+      console.log("PLZvalue :>> ", plzValue)
 
+      if (plzValue.length > 4) {
+        fetch(
+          `https://cors-anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?finda=city&city=${plzValue}&lang=de_DE`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("Fetched_data :>> ", data)
+            let city = data.rows[0].city
+            console.log("este es la var city :>>", city)
+            // assign the value of the variable city to the object "stadt"
+            this.stadt.value = city
+
+            let streets = data.rows.map((x) => x.street)
+            console.log("este es la var streets :>>", streets)
+            // create and populate datalist
+            streets.forEach((element) => {
+              let option = document.createElement("option")
+              option.value = element
+              this.straße.appendChild(option)
+            })
+          })
+          .catch((err) => console.log(err))
+      } else if (plzValue.length == "") {
+        this.stadt.value = ""
+        let datalistOpts = this.straße.children.length
+        for (var i = 0; i < datalistOpts; i++) {
+          this.straße.children[0].remove()
+        }
+      }
+    }
+
+    this.plz.addEventListener("keyup", fetchData)
+
+    const formToJSON = (elements) => {
+      ;[].reduce.call(
+        elements,
+        (data, element) => {
+          data[element.name] = element.value
+          console.log("DATA_OBJ_LITERAL :>> ", data)
+          // console.log("JSON_stringify :>> ", JSON.stringify(data))
+          return data
+        },
+        {}
+      )
+    }
+
+    const handleFormSubmit = (e) => {
+      // Stop the form from submitting since we’re handling that with FETCH.
+      e.preventDefault()
+
+      // The HTMLFormElement property elements returns an HTMLFormControlsCollection listing
+      // all the form controls contained in the <form> element.
+      // console.log('FORM_ELEMENTS:>> ', form.elements)
+
+      // Call our function to get the form data obj.
+      const dataObj = formToJSON(this.form.elements) // why doesn't save the data obj in the const?
+      console.log("TypeOf_DATAOBJ :>> ", typeof dataObj)
+      console.log("DATA_in_HandleSubmit :>> ", dataObj)
+      // Demo only: print the form data onscreen as a formatted JSON object.
+
+      // Use `JSON.stringify()` to make the output valid, human-readable JSON.
+      // this.dataContainer.textContent = JSON.stringify(data, null, "  ")
+      this.dataContainer.textContent = JSON.stringify(dataObj)
+      // console.log("DATA CONTAINER_text :>> ", this.dataContainer.textContent)
+      // const dataObj = {} :>> print "{}" on the dataContainer line 131 works
+      // ...this is where we’d actually do something with the form data...
+    }
+    this.form.addEventListener("submit", handleFormSubmit)
   }
 
   // disconnectedCallback() {
-  //   plz.removeEvenetListener("keyup", this)
+  //
   // }
 }
 
