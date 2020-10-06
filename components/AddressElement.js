@@ -25,7 +25,7 @@ template.innerHTML = `
                   </li>
                   <li>
                       <label for="straße">Straße</label>
-                      <input type="text" list="straße" name ="straße"/>
+                      <input type="text" list="straße" name ="straße" id="straße_input"/>
                       <datalist id="straße">
                       </datalist>
                   </li>
@@ -66,6 +66,8 @@ class AddressElement extends HTMLElement {
     this.plz = shadowRoot.querySelector("#plz")
     this.stadt = shadowRoot.querySelector("#stadt")
     this.straße = shadowRoot.querySelector("#straße")
+    this.straße_input = shadowRoot.querySelector("#straße_input")
+    this.hausnummer = shadowRoot.querySelector("#hausnummer")
     this.form = shadowRoot.querySelector("#contact_form")
     this.dataContainer = shadowRoot.querySelector("#results_display")
   }
@@ -101,10 +103,13 @@ class AddressElement extends HTMLElement {
           .catch((err) => console.log(err))
       } else if (plzValue.length == "") {
         this.stadt.value = ""
+        this.hausnummer.value = ""
+        // why field doesn't empty???
         let datalistOpts = this.straße.children.length
         for (var i = 0; i < datalistOpts; i++) {
           this.straße.children[0].remove()
         }
+        this.straße_input.value = ""
       }
     }
 
