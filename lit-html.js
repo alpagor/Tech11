@@ -1,91 +1,165 @@
 // Import lit-html
 import { html, render } from "./node_modules/lit-html/lit-html"
 
-// falta crear la interpolación...como? guardando en una variable "labels"
-// las labels y como "value" onChange?
 
 // Define a template
-const myTemplate = html` <head>
-    <link rel="stylesheet" type="text/css" href="../styles.css" />
-  </head>
+const myTemplate = (plz, stadt,  ) => html` 
+<head>
+<link rel="stylesheet" type="text/css" href="../styles.css"> 
+</head>
 
-  <div class="container">
-    <form class="contact_form" action="#" id="contact_form">
-      <div>
+
+<div class="container">
+<form class="contact_form" id="contact_form">
+    <div>
         <ul>
-          <li>
-            <h2>Adresse</h2>
-          </li>
-          <div class="container">
             <li>
-              <label for="plz">PLZ</label>
-              <input type="text" id="plz" required />
+                <h2>Adresse</h2>
             </li>
+            <div class="form_container">
+                <li>
+                    <label for="plz" id="plz_label">PLZ</label>
+                    <input type="text" id="plz" name ="plz" value="${plz.value}" required />
+                </li>
+                <li>
+                    <label for="stadt">Stadt</label>
+                    <input type="text" id="stadt" name ="stadt" value="${stadt.value}" required />
+                </li>
+                <li>
+                    <label for="straße">Straße</label>
+                    <input type="text" list="straße" name ="straße" id="straße_input"/>
+                    <datalist id="straße" .listItems=${option.value}>
+                    </datalist>
+                </li>
+                <li>
+                    <label for="hausnummer">Hausnummer</label>
+                    <input type="text" id="hausnummer" name="hausnummer" required />
+                </li>
+                <li>
+                    <label for="land">Land</label>
+                    <input type="text" id="land" name="land" value="de" required />
+                </li>
+            </div>
             <li>
-              <label for="stadt">Stadt</label>
-              <input type="text" id="stadt" required />
+                <button type="submit" id="info">INFO</button>
             </li>
-            <li>
-              <label for="straße">Straße</label>
-              <input type="text" id="straße" required />
-            </li>
-            <li>
-              <label for="hausnummer">Hausnummer</label>
-              <input type="text" id="hausnummer" required />
-            </li>
-            <li>
-              <label for="land">Land</label>
-              <input type="text" id="land" value="de" required />
-            </li>
-          </div>
-          <li>
-            <button type="submit" id="info">Info</button>
-          </li>
         </ul>
-      </div>
-    </form>
-  </div>`
+    </div>
+</form>
+</div>
+<div class="results">
+<h2 class="results__heading">Form Data</h2>
+<pre class="results__display-wrapper"><code class="results__display" id="results_display"></code></pre>
+</div>`
 
-const url = `https://cors-
-  anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?autocomplete=plz&plz_city=ort`
+// Javascript logic of the component
+class AddressElement extends HTMLElement {
+  constructor() {
+    super()
+    //creating the shadow DOM
+    //this is a reference to the custom element itself
+    const shadow = this.attachShadow({ mode: "open" })
+    //we must clone the template tag so it can be processed
+    const shadowMarkup = template.content.cloneNode(true)
+    shadow.appendChild(shadowMarkup)
+    // Render the template to the document
+    // Agregamos nuestro template al cuerpo de nuestro documento
+    // render(myTemplate(), document.body)
 
-const jsonData = fetch(url)
-  .then((res) => res.json())
-  .catch((err) => console.log(err))
+    // public properties
+    let shadowRoot = this.shadowRoot
+    this.plz = shadowRoot.querySelector("#plz")
+    this.stadt = shadowRoot.querySelector("#stadt")
+    this.straße = shadowRoot.querySelector("#straße")
+    this.straße_input = shadowRoot.querySelector("#straße_input")
+    this.hausnummer = shadowRoot.querySelector("#hausnummer")
+    this.form = shadowRoot.querySelector("#contact_form")
+    this.dataContainer = shadowRoot.querySelector("#results_display")
+  }
 
-console.log(data)
+  // The connectedCallback () method is called every time you insert a custom element on the page.
+  // WebComponent logic
+  connectedCallback() {
+    const fetchData = () => {
+      let plzValue = this.plz.value
+      console.log("PLZvalue :>> ", plzValue)
 
-// Render the template to the document
-// Agregamos nuestro template al cuerpo de nuestro documento
-render(myTemplate, document.body)
+      if (plzValue.length > 4) {
+        fetch(
+          `https://cors-anywhere.herokuapp.com/www.postdirekt.de/plzserver/PlzAjaxServlet?finda=city&city=${plzValue}&lang=de_DE`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("Fetched_data :>> ", data)
+            let city = data.rows[0].city
+            console.log("este es la var city :>>", city)
+            // assign the value of the variable city to the object "stadt"
+            this.stadt.value = city
 
+            let streets = data.rows.map((x) => x.street)
+            console.log("este es la var streets :>>", streets)
+            // create and populate datalist
+            streets.forEach((element) => {
+              let option = document.createElement("option")
+              option.value = element
+              this.straße.appendChild(option)
+            })
+          })
+          .catch((err) => console.log(err))
+      } else if (plzValue.length == "") {
+        this.stadt.value = ""
+        this.hausnummer.value = ""
+        let datalistOpts = this.straße.children.length
+        for (var i = 0; i < datalistOpts; i++) {
+          this.straße.children[0].remove()
+        }
+        this.straße_input.value = ""
+      }
+    }
 
+    this.plz.addEventListener("keyup", fetchData)
 
+    // check for valid elements.
+    const isValidElement = (element) => {
+      return element.name && element.value
+    }
 
+    const formToJSON = (elements) =>
+      [].reduce.call(
+        elements,
+        (data, element) => {
+          if (isValidElement(element)) {
+            data[element.name] = element.value
+          }
+          return data
+        },
+        {}
+      )
 
-formToJSON = (elements) => {
-  [].reduce.call(elements, (data, element) => {
-    data[element.name] = element.value;
-    return data;
-  }, {})
+    const handleFormSubmit = (e) => {
+      // Stop the form from submitting since we’re handling that with FETCH.
+      e.preventDefault()
+
+      // Call our function to get the form data obj.
+      const dataObj = formToJSON(this.form.elements)
+
+      // Use `JSON.stringify()` to make the output valid, human-readable JSON.
+      this.dataContainer.textContent = JSON.stringify(dataObj, null, "  ")
+    }
+    this.form.addEventListener("submit", handleFormSubmit)
+  }
+
 }
 
-handleFormSubmit = (e) => {
-  // Stop the form from submitting since we’re handling that with AJAX.
-  e.preventDefault()
-  // Call our function to get the form data.
-  const data = formToJSON(form.elements)
-  console.log('DATA :>> ', data);
-  // Demo only: print the form data onscreen as a formatted JSON object.
-  const dataContainer = this.shadowRoot.querySelector("#results_display")
-  // console.log("Aquí muestro datos:>> ", dataContainer)
+// we indicate to the browser that there is an association between the name of the tag
+// and the class that implements its functionality
 
-  // Use `JSON.stringify()` to make the output valid, human-readable JSON.
-  dataContainer.textContent = JSON.stringify(data, null, "  ")
-  // ...this is where we’d actually do something with the form data...
-}
+customElements.define("address-element", AddressElement)
 
-const button = shadowRoot.querySelector(".contact_form")
-// console.log("form element :>> ", button)
-button.addEventListener("submit", this.handleFormSubmit)
+
+
+
+
+
+
 

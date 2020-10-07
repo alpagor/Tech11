@@ -16,52 +16,107 @@ label {
   padding: 1vw;
 }
 
-/* .contact_form li {
-  padding: 2px;
-  border-bottom: 1px solid #eee;
-  position: relative;
-} */
-
-/* .contact_form li:first-child,
-.contact_form li:last-child {
-  border-bottom: 1px solid #777;
-} */
-
 /* === Form Header === */
 .contact_form h2 {
-  margin: 0 0.5vw;
+  margin: 0vw 0.1vw 1vw;
 }
 
 /* === Form Elements === */
+/* #plz {
+  width: 100%;
+  padding: 0.5vh 0.2vw;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+#stadt {
+  width: 100%;
+  padding: 0.5vh 0.2vw;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+#straße_input {
+  width: 100%;
+  padding: 0.5vh 0.2vw;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+#hausnummer {
+  width: 100%;
+  padding: 0.5vh 0.2vw;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+#land {
+  width: 100%;
+  padding: 0.5vh 0.2vw;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+} */
+
+label {
+  padding: 1.7vw 1.7vw 1.7vw 0;
+  /* display: inline-block; */
+}
 
 .form_container {
-  display: flex;
+  display: inline-flex;
   flex-flow: row wrap;
   max-width: 80%;
+  /* border-style: solid;
+  border-width: 0.1vw;
+  border-color: lightgray; */
+  border-radius: 0.3vw;
+  background-color: #f2f2f2;
+  padding: 1.4vw;
 }
 
 .form_container li {
   padding: 0.5vw;
 }
 
-#plz_label {
-  padding-right: 1.9vw;
+#plz_li {
+  flex: 1 1 auto;
 }
 
-input[type="text" i] {
-  padding: 0.5vh 0.2vw;
+#plz_label {
+  padding-right: 2vw;
+}
+
+#stadt_li {
+  flex: 2 2 25vw;
+}
+
+#stadt {
+  width: 80%;
+}
+
+#straße_li {
+  flex: 2 2 25vw;
+}
+
+#straße_li label {
+  padding-left: 0vw;
+}
+
+#straße_input {
+  width: 80%;
 }
 
 .contact_form label {
-  /* width: 5px; */
-  /* margin-top: 3px; */
-  /* display: inline-block; */
-  /* float: left; */
-  padding-right: 1.7vw;
+  padding-right: 1vw;
 }
 
 .contact_form button {
-  margin: 0.5vw;
+  margin: 1.5vw 0.1vw;
 }
 
 button[type="submit"] {

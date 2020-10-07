@@ -30,7 +30,8 @@ User Story:
 - ​	  For city lookup, please reverse engineer the service from https://www.postdirekt.de/plzserver/ Select “Ort” (city) and enter for example “97070” as zip code. Please analyze how to query the data and reuse the JSON REST interface. (https://www.postdirekt.de/plzserver/PlzAjaxServlet)
 
 
-Because of CORS, please use: https://cors-anywhere.herokuapp.com/https://www.postdirekt.de/plzserver/PlzAjaxServlet
+- Because of CORS, please use: https://cors-anywhere.herokuapp.com/https://www.postdirekt.de/plzserver/PlzAjaxServlet
+
 
 - ​	 The component must be an ES6 Web Component (see MDN) and should be reusable
 

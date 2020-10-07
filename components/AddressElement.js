@@ -15,15 +15,15 @@ template.innerHTML = `
                   <h2>Adresse</h2>
               </li>
               <div class="form_container">
-                  <li>
+                  <li id="plz_li">
                       <label for="plz" id="plz_label">PLZ</label>
                       <input type="text" id="plz" name ="plz" required />
                   </li>
-                  <li>
+                  <li id="stadt_li">
                       <label for="stadt">Stadt</label>
                       <input type="text" id="stadt" name ="stadt" required />
                   </li>
-                  <li>
+                  <li id="straße_li">
                       <label for="straße">Straße</label>
                       <input type="text" list="straße" name ="straße" id="straße_input"/>
                       <datalist id="straße">
@@ -136,7 +136,7 @@ class AddressElement extends HTMLElement {
       e.preventDefault()
 
       // Call our function to get the form data obj.
-      const dataObj = formToJSON(this.form.elements) // why doesn't save the data obj in the const?
+      const dataObj = formToJSON(this.form.elements)
 
       // Use `JSON.stringify()` to make the output valid, human-readable JSON.
       this.dataContainer.textContent = JSON.stringify(dataObj, null, "  ")
