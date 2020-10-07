@@ -13,27 +13,30 @@ User Story:
 
  Business requirements (function):
 
-​	▪ The address widget must have the following fields: o zip
+- ​	The address widget must have the following fields: o zip
+  - city
+  - street
+  - houseNumber
+  - country (is fix: "de" - Deutschland)
+- ​	After entering the zip code, the city should be prefilled
 
-​			▪ city
- 	       ▪ street
- 		   ▪ houseNumber
-  		  ▪ country (is fix: “de” - Deutschland)
 
-​	▪  After entering the zip code, the city should be prefilled
+- ​	Based on the zip/city also the streets should be selectable. Only streets from the chosen city should be selectable.
 
-​	▪  Based on the zip/city also the streets should be selectable. Only streets from the chosen city should be 		selectable.
 
-​	▪  In the bottom of the widget there should be a button “info”. By clicking the button, a message box 	    		should be displayed where all data of the widget are formatted as JSON. Technical requirements (non-		functional):
+- ​	In the bottom of the widget there should be a button “info”. By clicking the button, a message box 	    		should be displayed where all data of the widget are formatted as JSON. Technical requirements (non-		functional):
 
-​	▪  For city lookup, please reverse engineer the service from https://www.postdirekt.de/plzserver/ Select 		“Ort” (city) and enter for example “97070” as zip code.
- 		Please analyze how to query the data and reuse the JSON REST interface. (https://www.postdirekt.de/p		lzserver/PlzAjaxServlet)
+
+- ​	  For city lookup, please reverse engineer the service from https://www.postdirekt.de/plzserver/ Select “Ort” (city) and enter for example “97070” as zip code. Please analyze how to query the data and reuse the JSON REST interface. (https://www.postdirekt.de/plzserver/PlzAjaxServlet)
+
 
 Because of CORS, please use: https://cors-anywhere.herokuapp.com/https://www.postdirekt.de/plzserver/PlzAjaxServlet
 
-​	▪  The component must be an ES6 Web Component (see MDN) and should be reusable
+- ​	 The component must be an ES6 Web Component (see MDN) and should be reusable
 
-​	▪  Provide a test page that contains two time the widget on the same page
+
+- ​	 Provide a test page that contains two time the widget on the same page
+
 
 ## Summary
 
