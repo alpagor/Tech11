@@ -77,7 +77,6 @@ class AddressElement extends HTMLElement {
   connectedCallback() {
     const fetchData = () => {
       let plzValue = this.plz.value
-      console.log("PLZvalue :>> ", plzValue)
 
       if (plzValue.length > 4) {
         fetch(
@@ -85,14 +84,13 @@ class AddressElement extends HTMLElement {
         )
           .then((res) => res.json())
           .then((data) => {
-            console.log("Fetched_data :>> ", data)
             let city = data.rows[0].city
-            console.log("este es la var city :>>", city)
+
             // assign the value of the variable city to the object "stadt"
             this.stadt.value = city
 
             let streets = data.rows.map((x) => x.street)
-            console.log("este es la var streets :>>", streets)
+
             // create and populate datalist
             streets.forEach((element) => {
               let option = document.createElement("option")

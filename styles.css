@@ -1,5 +1,3 @@
-@import url("sanitize.css");
-
 /* === Form Typography === */
 .contact_form h2,
 .contact_form,
@@ -91,9 +89,8 @@ button[type="submit"] {
 
 .results {
   width: 90vw;
-  max-width: 30%;
+  max-width: 25%;
   margin: 0vh 4vw;
-  /* margin: 12vh; */
 }
 
 .results__heading {
