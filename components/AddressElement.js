@@ -20,20 +20,20 @@ template.innerHTML = `
                       <input type="text" id="plz" name ="plz" required />
                   </li>
                   <li id="stadt_li">
-                      <label for="stadt">Stadt</label>
+                      <label for="stadt" id="stadt_label">Stadt</label>
                       <input type="text" id="stadt" name ="stadt" required />
                   </li>
                   <li id="straße_li">
-                      <label for="straße">Straße</label>
+                      <label for="straße" id="straße_label">Straße</label>
                       <input type="text" list="straße" name ="straße" id="straße_input"/>
                       <datalist id="straße">
                       </datalist>
                   </li>
-                  <li>
+                  <li id="hausnummer_li">
                       <label for="hausnummer">Hausnummer</label>
                       <input type="text" id="hausnummer" name="hausnummer" required />
                   </li>
-                  <li>
+                  <li id="land_li">
                       <label for="land">Land</label>
                       <input type="text" id="land" name="land" value="de" required />
                   </li>
